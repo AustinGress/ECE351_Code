@@ -19,6 +19,9 @@ import scipy.signal as sig
 import control as con
 import pandas as pd
 
+
+#%% Part 1: Sine Method and Built in Impulse Function Plots
+
 R = 1000
 L = 0.027
 C = 100*10**-9
@@ -26,7 +29,7 @@ C = 100*10**-9
 steps = 1e-8
 t = np.arange(0, 1.2e-3 + steps, steps)
 
-def my_step(t):
+def my_step(t): #Built in Step Function
     f = np.zeros(t.shape)
     
     
@@ -38,38 +41,49 @@ def my_step(t):
     return f
 
 
-def sine_method(R,L,C,t):
+def sine_method(R,L,C,t): #Defined Sine Method
     y = np.zeros(t.shape)
     alpha = -(1/(2*R*C))
     omega = ((1/2)*np.sqrt(((1/(R*C))**2)-4*((1/(np.sqrt(L*C)))**2)+0*1j))
     p = alpha + omega
-    g = (1/(R*C))*p
+    g = (1/(R*C))*p 
     g_mag = np.abs(g)
     g_rad = np.angle(g)
     g_deg = g_rad*(180/np.pi)
-    y = ((g_mag/np.abs(omega))*np.exp(alpha*t)*np.sin(np.abs(omega)*t+g_rad)
+    y = ((g_mag/np.abs(omega))*np.exp(alpha*t)*np.sin(np.abs(omega)*t+g_rad)  
         *my_step(t))
     
-    return y
+    return y #See lab report for written equation
 
 y = sine_method(R,L,C,t)
 
 plt.figure(figsize = (10,7))
+plt.subplot(3,1,1)
 plt.plot(t, y)
-plt.ylabel('F(t) function')
-plt.title('H(s) Function')
+plt.ylabel('Sine Method')
+plt.title('Transfer Function Plot')
 plt.grid()
 plt.show()
 
-t = np.arange(0, 1.2e-3 + steps, steps)
+num = [1/(R*C), 0] 
+den = [1, 1/(R*C), (1/(np.sqrt(L*C)))**2] 
 
+tout , yout = sig.impulse((num , den), T = t)
+
+plt.plot(tout, yout)
+plt.subplot(3,1,2)
+plt.ylabel('Impulse function')
+plt.grid()
+plt.show()
+
+
+#%% Part 2: Step Function Built in Plot
 num = [1/(R*C), 0] 
 den = [1, 1/(R*C), (1/(np.sqrt(L*C)))**2] 
 
 tout , yout = sig.step((num , den), T = t)
 
 
-plt.figure(figsize = (10,7))
 plt.plot(tout, yout)
 plt.ylabel('F(t) function')
 plt.title('Step Function')
