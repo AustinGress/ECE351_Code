@@ -1,0 +1,122 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Mar  3 13:09:52 2020
+
+@author: GRES6121
+"""
+################################################################
+#
+# Austin Gress
+# ECE 351-51
+# Lab: 
+# Due Date:
+# Additional Comments:
+################################################################
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import control as con
+import pandas as pd
+
+steps = 1e-3
+t = np.arange(0, 2 + steps, steps)
+
+def my_step(t): #Built in Step Function
+    f = np.zeros(t.shape)
+    
+    
+    for i in range(len(t)):
+        if t[i] >= 0:
+            f[i] = 1
+        else:
+            f[i] = 0
+    return f
+
+#%% Part 1
+
+def Funct(t):    
+    y = (np.exp(-6*t) - 0.5*np.exp(-4*t) + 0.5)*my_step(t)
+
+    return y
+
+y = Funct(t)
+
+plt.plot(t, y)
+plt.title('Plot')
+plt.ylabel('y(t)')
+plt.grid()
+plt.show()
+
+
+
+num = [1, 6, 12] 
+den = [1, 10, 24] 
+
+tout , yout = sig.step((num , den), T = t)
+
+plt.plot(tout, yout)
+plt.title('Residue Step Function')
+plt.ylabel('Y(s)')
+plt.grid()
+plt.show()
+
+
+num = [1, 6, 12] 
+den = [1, 10, 24, 0] 
+
+R, P, K = sig.residue(num , den)
+
+print ('\nRoots:', R)
+print ('\nPoles:', P)
+print ('\nGain: ', K)
+
+#%% Part 2
+num = [25250] 
+den = [1, 18, 218, 2036, 9085, 25250, 0] 
+
+R, P, K = sig.residue(num , den)
+
+print ('\nRoots:', R)
+print ('\nPoles:', P)
+print ('\nGain: ', K)
+
+
+
+def cosine_method(R, P, t): #Defined Cosine Method
+    
+    y = 0
+    
+    for i in range(len(R)):
+        alpha = np.real(P[i])
+        omega = np.imag(P[i])
+        
+        k_mag = np.abs(R[i])
+        k_rad = np.angle(R[i])
+        y = y + k_mag*np.exp(alpha*t)*np.cos(omega*t+k_rad)*my_step(t)
+    
+    
+    return y #See lab report for written equation
+
+
+t = np.arange(0, 4.5 + steps, steps)
+y1 = cosine_method(R, P, t)
+
+
+plt.plot(t, y1)
+plt.title('Cosine Method')
+plt.ylabel('H(s) from Part 2 Task 1')
+plt.grid()
+plt.show()
+
+
+num = [25250] 
+den = [1, 18, 218, 2036, 9085, 25250] 
+
+tout , yout = sig.step((num , den), T = t)
+
+plt.plot(tout, yout)
+plt.title('Step Response')
+plt.ylabel('H(s) from Part 2 Task 2')
+plt.grid()
+plt.show()
