@@ -1,0 +1,102 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Mar 10 13:18:58 2020
+
+@author: gres6121
+"""
+################################################################
+#
+# Austin Gress
+# ECE 351-51
+# Lab: 
+# Due Date:
+# Additional Comments:
+################################################################
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import control as con
+import pandas as pd
+
+print('\n\n\n*Properly extend Console for functions.')
+#G(s)
+gnum = [1,9]
+gden = [1,-2,-40,-64]
+
+
+z, p, k = sig.tf2zpk(num, den)
+
+print ('\n\nRoots:', z)
+print ('\nPoles:', p)
+print ('\nGain: ', k)
+
+#A(s)
+anum = [1,4]
+aden = [1,4,3]
+
+z, p, k = sig.tf2zpk(num, den)
+
+print ('\n\nRoots:', z)
+print ('\nPoles:', p)
+print ('\nGain: ', k)
+
+#B(s)
+bnum = [1,26,168]
+
+nArray = np.roots(num)
+
+print ('\n\nRoots:', nArray)
+
+hnum = sig.convolve(anum, gnum)
+hden = sig.convolve(aden, gden)
+
+print('\n\n          y(t)            ', hnum)
+print('H(s) =   ------- = --------------------------------')
+print('          x(t)    ', hden)
+
+
+
+print('\n\nBecause the zeros are positive, the function is potentially unstable.') 
+print('\nBy the graph below we see the values grow exponentially')
+
+
+
+steps = 3e-3
+t = np.arange(0, 2+steps, steps)
+
+tout, yout = sig.step((hnum,hden), T = t)
+
+plt.plot(tout, yout)
+plt.title('Step Response')
+plt.ylabel('H(s)')
+plt.grid()
+plt.show()
+
+
+
+hnum = sig.convolve(anum, gnum)
+hden = sig.convolve(aden, gden)
+
+print('\n\n          y(s)            ', hnum)
+print('H(s) =   ------- = --------------------------------')
+print('          x(s)    ', hden)
+
+
+hnum = sig.convolve(anum,gnum)
+hden = sig.convolve(aden,(gden+sig.convolve(bnum,gnum)))
+
+tout, yout = sig.step((hnum,hden), T = t)
+
+plt.plot(tout, yout)
+plt.title('Step Response')
+plt.ylabel('H(s)')
+plt.grid()
+plt.show()
+
+print('\n\n          y(s)            ', hnum)
+print('H(s) =   ------- = --------------------------------')
+print('          x(s)    ', hden)
+
+print('\nAs you can see from the graph above, the values converge or start to.')
+print('\nBecause of the negative poles we can see that the graph does indeed represent the function')
