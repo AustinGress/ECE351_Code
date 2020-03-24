@@ -25,7 +25,7 @@ gnum = [1,9]
 gden = [1,-2,-40,-64]
 
 
-z, p, k = sig.tf2zpk(num, den)
+z, p, k = sig.tf2zpk(gnum, gden)
 
 print ('\n\nRoots:', z)
 print ('\nPoles:', p)
@@ -35,7 +35,7 @@ print ('\nGain: ', k)
 anum = [1,4]
 aden = [1,4,3]
 
-z, p, k = sig.tf2zpk(num, den)
+z, p, k = sig.tf2zpk(anum, aden)
 
 print ('\n\nRoots:', z)
 print ('\nPoles:', p)
@@ -44,7 +44,7 @@ print ('\nGain: ', k)
 #B(s)
 bnum = [1,26,168]
 
-nArray = np.roots(num)
+nArray = np.roots(bnum)
 
 print ('\n\nRoots:', nArray)
 
@@ -100,3 +100,40 @@ print('          x(s)    ', hden)
 
 print('\nAs you can see from the graph above, the values converge or start to.')
 print('\nBecause of the negative poles we can see that the graph does indeed represent the function')
+
+
+Output: 
+*Properly extend Console for functions.
+
+
+Roots: [-9.]
+
+Poles: [ 8. -4. -2.]
+
+Gain:  1.0
+
+
+Roots: [-4.]
+
+Poles: [-3. -1.]
+
+Gain:  1.0
+
+
+Roots: [-14. -12.]
+
+
+          y(t)             [ 1 13 36]
+H(s) =   ------- = --------------------------------
+          x(t)     [   1    2  -45 -230 -376 -192]
+
+ 
+
+          y(s)             [ 1 13 36]
+H(s) =   ------- = --------------------------------
+          x(s)     [   1    2  -45 -230 -376 -192]
+
+
+          y(s)             [ 1 13 36]
+H(s) =   ------- = --------------------------------
+          x(s)     [   2   41  500 2995 6878 4344]
